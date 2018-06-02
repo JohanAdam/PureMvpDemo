@@ -24,6 +24,8 @@ public interface DetailsContract {
 
   interface Presenter {
 
+    void setView(DetailsContract.View view);
+
     void loadMessage();
 
     void submitName(String firstName, String lastName);

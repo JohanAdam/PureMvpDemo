@@ -10,8 +10,9 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.nyannyan.puremvpdemo.DetailsContract.Presenter;
 import io.nyannyan.puremvpdemo.DetailsContract.View;
+import io.nyannyan.puremvpdemo.root.App;
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements View {
 
@@ -28,7 +29,9 @@ public class MainActivity extends AppCompatActivity implements View {
 //  private TextView tvDetail;
 //  private Button btnSubmit;
 
-  private Presenter presenter;
+//  private Presenter presenter;
+  @Inject
+  DetailsContract.Presenter presenter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +39,8 @@ public class MainActivity extends AppCompatActivity implements View {
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
 
-    presenter = new DetailsPresenter(this);
-
+//    presenter = new DetailsPresenter(this);
+    ((App) getApplication()).getApplicationComponent().inject(this);
   }
 
   @Override
@@ -53,5 +56,13 @@ public class MainActivity extends AppCompatActivity implements View {
           presenter.submitName(etFirstName.getText().toString(), etLastName.getText().toString());
           presenter.loadMessage();
         }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+
+    //We cant use presenter in view if we not link it
+    presenter.setView(MainActivity.this);
   }
 }
